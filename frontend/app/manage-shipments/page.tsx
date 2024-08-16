@@ -43,7 +43,9 @@ export default async function ManageShipments() {
                 <MainHeader />
                 <div className="py-10 px-[15%] flex-grow">
                     <nav className="flex flex-row justify-between mb-6">
-                        <Button type="primary">Criar envio</Button>
+                        <Button type="primary">
+                            <Link href="/create-shipment" className="font-bold">Criar envio</Link>
+                        </Button>
                         <Button type="text">
                             <Link href="/" className="font-bold">Voltar</Link>
                         </Button>
