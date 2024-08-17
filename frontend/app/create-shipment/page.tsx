@@ -1,73 +1,92 @@
 "use client";
 
 import MainHeader from "@/components/MainHeader/page";
-import { Button, List, Select } from "antd";
+import { Button, List, Select, message } from "antd";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { fetchAllProducts } from "@/actions/products";
+import { createShipment } from "@/actions/shipments";
+
+type Product = { id: string; name: string };
+type ProductOption = { label: string; value: string; item: Product };
 
 export default function CreateShipment() {
-    const [selectedProduct, setSelectedProduct] = useState<{ id: string, name: string } | null>(null);
-    const [productList, setProductList] = useState<{ id: string, name: string, uniqueId: number }[]>([]);
-    const [options, setOptions] = useState<{ label: string, value: string, item: { id: string, name: string } }[]>([]);
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [productList, setProductList] = useState<Product[]>([]);
+    const [options, setOptions] = useState<ProductOption[]>([]);
+    const [allProducts, setAllProducts] = useState<Product[]>([]);
 
     useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const response = await fetch('http://localhost:4000/products');
-    
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-    
-                const data = await response.json();
-    
-                setOptions(data.map((item: { id: string, name: string }) => ({
-                    label: item.name,
-                    value: item.id,
-                    item: item,
-                })));
-            } catch (error) {
-                console.error("Failed to fetch products:", error);
-            }
+        const loadProducts = async () => {
+            const data = await fetchAllProducts();
+            setOptions(data);
+            setAllProducts(data.map((item: ProductOption) => ({ id: item.value, name: item.label })));
         };
 
-        fetchProducts();
+        loadProducts();
     }, []);
 
     const handleSelectChange = (value: string, option: any) => {
         setSelectedProduct(option.item);
     };
 
-    const generateUniqueId = (): number => {
-        let uniqueId: number;
-        do {
-            uniqueId = Math.floor(Math.random() * 1000000);
-        } while (productList.some(item => item.uniqueId === uniqueId));
-        return uniqueId;
-    };
-
     const handleAddProduct = () => {
         if (selectedProduct) {
-            const newProduct = { ...selectedProduct, uniqueId: generateUniqueId() };
-            setProductList([...productList, newProduct]);
+            const updatedProductList = [...productList, selectedProduct];
+            setProductList(updatedProductList);
             setSelectedProduct(null);
+    
+            console.log("Updated product list:", updatedProductList);
         }
+    };
+    
 
-        console.log(productList);
+    const handleRemoveProduct = (index: number) => {
+        setProductList(productList.filter((_, i) => i !== index));
     };
 
-    const handleRemoveProduct = (uniqueId: number) => {
-        setProductList(productList.filter((item) => item.uniqueId !== uniqueId));
+    const handleCreateShipment = async () => {
 
-        console.log(productList);
+        const uniqueProductIds = productList
+            .map(item => item.id)
+            .filter((id, index, self) => self.indexOf(id) === index);
+        
+        const shipmentData = {
+            products: uniqueProductIds,
+        };
+    
+        try {
+            const result = await createShipment(shipmentData);
+    
+            if (result && result.error) {
+                throw new Error(result.error);
+            }
+    
+            setProductList([]);
+            setSelectedProduct(null);
+            message.success('Envio criado com sucesso!');
+    
+            console.log("Shipment data:", shipmentData);
+            console.log("Shipment result:", result);
+    
+        } catch (error) {
+            console.error('Failed to create shipment:', error);
+            message.error('Falha ao criar envio.');
+        }
     };
+    
 
     return (
         <div className="flex flex-col h-screen">
             <MainHeader />
-            <div className="py-10 px-[15%] flex-grow">
-                <Button type="text" className="mb-3">
-                    <Link href="/manage-shipments" className="font-bold">Voltar</Link>
+            <div className="py-10 px-[15%] flex flex-col justify-start">
+                <Button type="text" className="mb-3 w-[10%]">
+                    <Link 
+                        href="/manage-shipments" 
+                        className="font-bold"
+                    >
+                        Voltar
+                    </Link>
                 </Button>
                 <div className="flex flex-row justify-between">
                     <Select
@@ -81,39 +100,45 @@ export default function CreateShipment() {
                         type="primary" 
                         onClick={handleAddProduct}
                         disabled={!selectedProduct}
-                        >
+                    >
                         Adicionar
                     </Button>
                 </div>
-                <div className="mt-5">
+                <div className="mt-5 h-[60dvh]">
                     <List
                         header="Lista de produtos"
-                        className=""
                         bordered
                         dataSource={productList}
                         pagination={{
                             pageSize: 10,
                             align: "end",
                             position: "top",
-                          }}
-                        renderItem={(item) => (
+                        }}
+                        renderItem={(item, index) => (
                             <div className="flex flex-row justify-between">
-                                <List.Item 
-                                    className="w-[100%]"
-                                    key={item.uniqueId}>
+                                <List.Item key={index}>
                                     {item.name}
                                 </List.Item>
                                 <Button
                                     size="large"
-                                    className=""
                                     danger 
-                                    onClick={() => handleRemoveProduct(item.uniqueId)}>
-
+                                    onClick={() => handleRemoveProduct(index)}
+                                >
                                     Remover
                                 </Button>
                             </div>
                         )}
                     />
+                </div>
+                <div className="flex flex-row justify-end mt-3">
+                    <Button
+                        className="w-[10%]" 
+                        type="primary" 
+                        disabled={productList.length === 0}
+                        onClick={handleCreateShipment}
+                    >
+                        Criar envio
+                    </Button>
                 </div>
             </div>
         </div>
