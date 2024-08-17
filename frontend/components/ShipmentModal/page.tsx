@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Modal } from "antd";
-import { setStatus } from "@/actions/shipments"; // Import the setStatus function
+
 
 interface Product {
     id: string;
@@ -23,16 +23,6 @@ interface ShipmentDetailsProps {
 }
 
 export default function ShipmentDetails({ open, loading, shipment, onClose, onReload }: ShipmentDetailsProps) {
-    const handleSetStatus = async (status: string) => {
-        if (shipment) {
-            const result = await setStatus(shipment.id, status);
-            if (result && result.error) {
-                console.error(result.error);
-            } else {
-                onReload(); // Reload the shipment details after status update
-            }
-        }
-    };
 
     return (
         <Modal

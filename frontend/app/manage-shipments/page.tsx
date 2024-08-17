@@ -53,9 +53,7 @@ export default function ManageShipments() {
     }, []);
 
     useEffect(() => {
-        fetchShipments();
-        const intervalId = setInterval(fetchShipments, 5000);
-        return () => clearInterval(intervalId);
+        fetchShipments();;
     }, [fetchShipments]);
 
     const columns = [
@@ -123,7 +121,6 @@ export default function ManageShipments() {
                 <Table columns={columns} dataSource={shipments} rowKey="id" />
             </div>
 
-            {/* Use the ShipmentDetails component */}
             <ShipmentDetails
                 open={open}
                 loading={loading}

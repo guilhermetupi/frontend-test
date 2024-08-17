@@ -3,7 +3,8 @@ const nextConfig = {
     logging: {
         fetches: {
             fullUrl: true
-        }
+        },
+        level: 'verbose',
     }
 };
 

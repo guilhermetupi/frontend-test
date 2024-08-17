@@ -40,13 +40,11 @@ export default function CreateShipment() {
         }
     };
     
-
     const handleRemoveProduct = (index: number) => {
         setProductList(productList.filter((_, i) => i !== index));
     };
 
     const handleCreateShipment = async () => {
-
         const uniqueProductIds = productList
             .map(item => item.id)
             .filter((id, index, self) => self.indexOf(id) === index);
@@ -75,16 +73,12 @@ export default function CreateShipment() {
         }
     };
     
-
     return (
         <div className="flex flex-col h-screen">
             <MainHeader />
             <div className="py-10 px-[15%] flex flex-col justify-start">
                 <Button type="text" className="mb-3 w-[10%]">
-                    <Link 
-                        href="/manage-shipments" 
-                        className="font-bold"
-                    >
+                    <Link href="/manage-shipments" className="font-bold">
                         Voltar
                     </Link>
                 </Button>

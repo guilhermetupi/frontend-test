@@ -4,7 +4,9 @@ let url = process.env.API_URL;
 
 export const fetchAllProducts = async () => {
     try {
-        const response = await fetch(url + `/products`);
+        const response = await fetch(url + `/products`, {
+            cache: 'no-cache',
+        });
 
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
