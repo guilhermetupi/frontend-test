@@ -5,7 +5,7 @@ let url = process.env.API_URL;
 export const fetchAllProducts = async () => {
     try {
         const response = await fetch(url + `/products`, {
-            cache: 'no-cache',
+            cache: 'no-store',
         });
 
         if (!response.ok) {

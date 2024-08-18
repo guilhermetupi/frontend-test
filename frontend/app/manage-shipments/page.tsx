@@ -1,4 +1,3 @@
-// app/manage-shipments/page.tsx
 "use client";
 
 import MainHeader from "@/components/MainHeader/page";
@@ -114,7 +113,7 @@ export default function ManageShipments() {
                     </Button>
                     <Button type="text">
                         <Link href="/" className="font-bold">
-                            Voltar
+                            {"<- Voltar"}
                         </Link>
                     </Button>
                 </nav>

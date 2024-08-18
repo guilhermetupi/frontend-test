@@ -12,15 +12,15 @@ export const fetchAllShipments = async (): Promise<{
     status: string;
 }[]> => {
     const response = await fetch(url + `/shipments`, {
-        cache: 'force-cache',
+        next: { 
+            tags: ["shipments"],
+         },
     });
 
     if (!response.ok) {
         throw new Error('Failed to fetch shipments');
     }
 
-    revalidateTag('shipments-list');
-    
     return response.json();
 };
 
@@ -32,12 +32,7 @@ export const fetchShipmentById = async (id: string): Promise<{
     status: string;
     products: { id: string; name: string }[];
 }> => {
-    const response = await fetch(url + `/shipments/${id}`, {
-        cache: 'no-cache',
-        next: {
-            tags: ['shipment-' + id]
-        }
-    });
+    const response = await fetch(url + `/shipments/${id}`);
 
     if (!response.ok) {
         throw new Error(`Failed to fetch shipment with ID: ${id}`);
@@ -47,23 +42,24 @@ export const fetchShipmentById = async (id: string): Promise<{
 };
 
 export const createShipment = async (shipmentData: {
-    products: { id: string; name: string }[];
-  }): Promise<void | { error: string }> => {
-    const response = await fetch(url + `/shipments`, {
+  products: { id: string; name: string }[];
+}): Promise<void | { error: string }> => {
+  const response = await fetch(url + `/shipments`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
       },
       body: JSON.stringify(shipmentData),
       cache: 'no-store',
       next: {
-        tags: ['shipments-list'],
-      }
-    });
-  
-    if (!response.ok) {
+          tags: ['shipments'],
+      },
+  });
+
+  if (response.ok) {
+
+  } else {
       const errorData = await response.json();
       return { error: errorData.error };
-    }
-
-  };
+  }
+};

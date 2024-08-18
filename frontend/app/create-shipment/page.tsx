@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { fetchAllProducts } from "@/actions/products";
 import { createShipment } from "@/actions/shipments";
+import { revalidateShipments } from "@/actions/revalidate";
 
 type Product = { id: string; name: string };
 type ProductOption = { label: string; value: string; item: Product };
@@ -59,7 +60,9 @@ export default function CreateShipment() {
             if (result && result.error) {
                 throw new Error(result.error);
             }
-    
+            
+            revalidateShipments();
+
             setProductList([]);
             setSelectedProduct(null);
             message.success('Envio criado com sucesso!');
@@ -79,7 +82,7 @@ export default function CreateShipment() {
             <div className="py-10 px-[15%] flex flex-col justify-start">
                 <Button type="text" className="mb-3 w-[10%]">
                     <Link href="/manage-shipments" className="font-bold">
-                        Voltar
+                        {"<- Voltar"}
                     </Link>
                 </Button>
                 <div className="flex flex-row justify-between">
