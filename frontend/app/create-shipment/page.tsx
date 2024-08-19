@@ -80,11 +80,11 @@ export default function CreateShipment() {
         <div className="flex flex-col h-screen">
             <MainHeader />
             <div className="py-10 px-[15%] flex flex-col justify-start">
-                <Button type="text" className="mb-3 w-[10%]">
-                    <Link href="/manage-shipments" className="font-bold">
+                <Link href="/manage-shipments" className="font-bold">
+                    <Button type="text" className="mb-3 w-[10%]">
                         {"<- Voltar"}
-                    </Link>
-                </Button>
+                    </Button>
+                </Link>
                 <div className="flex flex-row justify-between">
                     <Select
                         defaultValue=""

@@ -106,16 +106,16 @@ export default function ManageShipments() {
             <MainHeader />
             <div className="py-10 px-[15%] flex-grow">
                 <nav className="flex flex-row justify-between mb-6">
-                    <Button type="primary">
-                        <Link href="/create-shipment" className="font-bold">
+                    <Link href="/create-shipment" className="font-bold">
+                        <Button type="primary" className="!font-bold">
                             Criar envio
-                        </Link>
-                    </Button>
-                    <Button type="text">
-                        <Link href="/" className="font-bold">
+                        </Button>
+                    </Link>
+                    <Link href="/" className="font-bold">
+                        <Button type="text" className="!font-bold">
                             {"<- Voltar"}
-                        </Link>
-                    </Button>
+                        </Button>
+                    </Link>
                 </nav>
                 <Table columns={columns} dataSource={shipments} rowKey="id" />
             </div>

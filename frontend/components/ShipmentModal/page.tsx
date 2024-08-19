@@ -11,7 +11,7 @@ interface ShipmentDetailsProps {
     open: boolean;
     loading: boolean;
     shipment: {
-        id: string;  // Make sure you include the shipment ID here
+        id: string;
         shipmentNumber: string;
         sendDate: Date;
         lastUpdate: Date;
@@ -27,18 +27,9 @@ export default function ShipmentDetails({ open, loading, shipment, onClose, onRe
     return (
         <Modal
             title={<p className="font-bold">Remessa {shipment?.shipmentNumber}</p>}
-            footer={
-                <div className="flex flex-row justify-end gap-1">
-                    <Button type="primary">
-                        Confirmar entrega
-                    </Button>
-                    <Button danger>
-                        Cancelar entrega
-                    </Button>
-                </div>
-            }
             open={open}
             onCancel={onClose}
+            footer={null}
         >
             {loading ? (
                 <p>Carregando...</p>

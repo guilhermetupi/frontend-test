@@ -1,7 +1,5 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
-
 let url = process.env.API_URL;
 
 export const fetchAllShipments = async (): Promise<{
